@@ -45,18 +45,18 @@ Welcome to the Advanced MERN Auth! This project demonstrates how to implement ro
    npm run dev
 
 **Usage**
-Email Verification: Upon registration, users will receive an email with a verification link. They must verify their email to activate their account.
-Password Recovery: Users can request a password reset, and they'll receive an email with a link to reset their password.
-Welcome Emails: After successful email verification, users will receive a personalized welcome email.
+- Email Verification: Upon registration, users will receive an email with a verification link. They must verify their email to activate their account.
+- Password Recovery: Users can request a password reset, and they'll receive an email with a link to reset their password.
+- Welcome Emails: After successful email verification, users will receive a personalized welcome email.
 
 **Integration**
-This authentication module can be easily integrated into your own projects. The module includes reusable middleware and utilities for handling authentication, making your application more secure with minimal effort.
+- This authentication module can be easily integrated into your own projects. The module includes reusable middleware and utilities for handling authentication, making your application more secure with minimal effort.
 
 **Contributing**
-Contributions are welcome! If you have suggestions for improvements or find any bugs, feel free to submit a pull request. Don't forget to give this repository a star if you found it helpful!
+- Contributions are welcome! If you have suggestions for improvements or find any bugs, feel free to submit a pull request. Don't forget to give this repository a star if you found it helpful!
 
 **License**
-This project is licensed under the ISC License. See the LICENSE file for details.
+- This project is licensed under the ISC License. See the LICENSE file for details.
 
-Happy coding! 😊
-You can adjust the repository URL, credentials, and other details to match your specific project setup.
+**Happy coding! 😊**
+- You can adjust the repository URL, credentials, and other details to match your specific project setup.
