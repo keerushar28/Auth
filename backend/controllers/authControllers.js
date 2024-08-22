@@ -84,6 +84,10 @@ export const login = async (req, res) => {
         if (!user.isVerified) {
             return res.status(400).json({ message: "Email is not verified" })
         }
+        generatecookie(res,user._id);
+        user.lastlogin = new Date();
+        await user.save();
+        res.status(200).json({ message: "Logged in Successfully" })
         
 
 
