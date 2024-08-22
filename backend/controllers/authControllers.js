@@ -84,6 +84,8 @@ export const login = async (req, res) => {
         if (!user.isVerified) {
             return res.status(400).json({ message: "Email is not verified" })
         }
+        
+
 
 
     } catch (error) {
@@ -94,7 +96,8 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        res.send("Logout routes")
+        res.clearCookie("token");
+        res.status(200).json({ message: "Logged Out Successfully" })
 
     } catch (error) {
         console.error(error);
