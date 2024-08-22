@@ -1,8 +1,9 @@
 import User from '../models/usermodel.js'
 import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
 import { Token } from '../utils/verificationToken.js';
 import { generatecookie } from '../utils/cookie.js';
-import { sendVerificationEmail, sendWelcomeEmail } from '../mail/email.js';
+import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } from '../mail/email.js';
 export const signUp = async (req, res) => {
     try {
         const { name, email, password, } = req.body;
@@ -84,11 +85,11 @@ export const login = async (req, res) => {
         if (!user.isVerified) {
             return res.status(400).json({ message: "Email is not verified" })
         }
-        generatecookie(res,user._id);
+        generatecookie(res, user._id);
         user.lastlogin = new Date();
         await user.save();
         res.status(200).json({ message: "Logged in Successfully" })
-        
+
 
 
 
@@ -106,5 +107,33 @@ export const logout = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error" })
+    }
+}
+
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "Invalid Email" });
+        }
+        const passwordToken = crypto.randomBytes(20).toString("hex");
+        user.resetToken = passwordToken;
+        const passwordTokenExpiresAt = Date.now() + 60 * 60 * 1000 //1hour
+        user.resetTokenExpiresAt = passwordTokenExpiresAt;
+        await user.save();
+        //const url = `http://localhost:3000/reset-password/${passwordToken}`
+
+
+        //send email
+        await sendPasswordResetEmail(user.email, `${process.env.CLIENT}/reset-password/${passwordToken}`)
+        res.status(200).json({ message: "Password Reset Email Sent" })
+
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" })
+
+
     }
 }

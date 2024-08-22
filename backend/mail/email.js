@@ -1,5 +1,5 @@
 
-import { VERIFICATION_EMAIL_TEMPLATE } from "./emailtemplate.js"
+import { PASSWORD_RESET_REQUEST_TEMPLATE, VERIFICATION_EMAIL_TEMPLATE } from "./emailtemplate.js"
 import { client, sender } from "./mailconfig.js"
 
 
@@ -38,6 +38,26 @@ export const sendWelcomeEmail = async (email, name) => {
     }
     catch (error) {
         console.error(error)
+    }
+}
+
+export const sendPasswordResetEmail = async (email, uri) => {
+    const recepient = [{ email }]
+    try {
+        const response = await client.send({
+            from: sender,
+            to: recepient,
+            subject: "Reset your password",
+            html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", uri),
+            category: "Password Reset"
+        })
+        console.log(response)
+
+
+    } catch (error) {
+
+        console.error(error)
+
     }
 }
 
