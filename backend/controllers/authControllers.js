@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { Token } from '../utils/verificationToken.js';
 import { generatecookie } from '../utils/cookie.js';
-import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } from '../mail/email.js';
+import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail, sendResetSuccessEmail } from '../mail/email.js';
 export const signUp = async (req, res) => {
     try {
         const { name, email, password, } = req.body;
@@ -123,13 +123,42 @@ export const forgotPassword = async (req, res) => {
 
         //send email
         await sendPasswordResetEmail(user.email, `${process.env.CLIENT}/reset-password/${passwordToken}`)
-        res.status(200).json({ message: "Password Reset Email Sent" })
+        res.status(200).json({ message: "Password Reset Email Sent",
+            passwordToken
+        })
+       
 
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error" })
 
+
+    }
+}
+export const resetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { password } = req.body;
+        const user = await User.findOne({
+            resetToken: token,
+            resetTokenExpiresAt: { $gt: Date.now() }
+        });
+        if(!user)
+        {
+            return res.status(400).json({ message: "Invalid Token" })
+        }
+        const hashedPassword= await bcrypt.hash(password,10)
+        user.password = hashedPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpiresAt = undefined;
+        await user.save();
+        await sendResetSuccessEmail(user.email);
+        res.status(201).json({message: "Password Reset Successfully"})
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" })
 
     }
 }
